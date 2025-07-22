@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Visitas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f1f1f1;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #28a745;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #estado {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <form id="formulario">
+    <h2>Registro de Visitas</h2>
+    <label>Nombre completo:</label>
+    <input type="text" name="nombre" required>
+
+    <label>Cedula:</label>
+    <input type="text" name="cedula" required>
+
+    <label>Empresa:</label>
+    <input type="text" name="empresa">
+
+    <label>Placa:</label>
+    <input type="text" name="placa">
+
+    <label>Persona a visitar:</label>
+    <input type="text" name="persona" required>
+
+    <label>Fecha ingreso:</label>
+    <input type="date" name="fechaIngreso" required>
+
+    <label>Fecha salida:</label>
+    <input type="date" name="fechaSalida" required>
+
+    <label>Motivo:</label>
+    <textarea name="motivo" required></textarea>
+
+    <label>Hora ingreso:</label>
+    <input type="time" name="horaIngreso" required>
+
+    <label>Hora salida:</label>
+    <input type="time" name="horaSalida" required>
+
+    <button type="submit">Registrar</button>
+    <div id="estado"></div>
+  </form>
+
+  <script>
+    async function enviarFormulario(event) {
+      event.preventDefault();
+
+      const datos = {
+        nombre: document.getElementById("nombre").value.toUpperCase(),
+        cedula: document.getElementById("cedula").value.toUpperCase(),
+        empresa: document.getElementById("empresa").value.toUpperCase(),
+        placa: document.getElementById("placa").value.toUpperCase(),
+        persona: document.getElementById("persona").value.toUpperCase(),
+        fechaIngreso: document.getElementById("fechaIngreso").value,
+        fechaSalida: document.getElementById("fechaSalida").value,
+        motivo: document.getElementById("motivo").value.toUpperCase(),
+        horaIngreso: document.getElementById("horaIngreso").value,
+        horaSalida: document.getElementById("horaSalida").value
+      };
+
+      const query = new URLSearchParams(datos);
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbxIWSofFGtlCfuHhxbN9ii2SxteAaJ7A5UyU8efAKhZ4DuHKJnQ7rFUK5s7E0RYSisC/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: query
+        });
+
+        const text = await res.text();
+        const estado = document.getElementById("estado");
+
+        if (text.includes("EXITOSO")) {
+          estado.textContent = "✅ Registro exitoso";
+          estado.style.color = "green";
+        } else {
+          estado.textContent = "❌ Error: " + text;
+          estado.style.color = "red";
+        }
+
+      } catch (err) {
+        document.getElementById("estado").textContent = "❌ Error al enviar los datos";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
+
