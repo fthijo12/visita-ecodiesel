@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Visitas | ECODIESEL COLOMBIA S.A.</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e8f5e9;
+      padding: 20px;
+      margin: 0;
+    }
+
+    header {
+      background-color: #1b5e20;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header img {
+      height: 60px;
+      margin-bottom: 10px;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 550px;
+      margin: 30px auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      text-transform: uppercase;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    #estado {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #2e7d32;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Ecodiesel_Colombia_logo.png/320px-Ecodiesel_Colombia_logo.png" alt="Logo ECODIESEL">
+    <h1>ECODIESEL COLOMBIA S.A.</h1>
+    <p>Registro de Visitas</p>
+  </header>
+
+  <form id="formulario">
+    <h2>Formulario de Registro</h2>
+
+    <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <input type="text" name="cedula" placeholder="Cédula" required>
+    <input type="text" name="empresa" placeholder="Empresa" required>
+    <input type="text" name="placa" placeholder="Placa"> <!-- Campo opcional -->
+    <input type="text" name="persona" placeholder="Persona a visitar" required>
+    <input type="date" name="fechaIngreso" required>
+    <input type="date" name="fechaSalida" required>
+    <textarea name="motivo" placeholder="Motivo de la visita" required></textarea>
+    <input type="time" name="horaIngreso" required>
+    <input type="time" name="horaSalida" required>
+
+    <button type="submit">Registrar</button>
+    <div id="estado"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('formulario');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const datos = new FormData(form);
+      const params = new URLSearchParams();
+
+      for (const [key, value] of datos.entries()) {
+        params.append(key, value.toUpperCase());
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbzuD3-HJ4Szr3xXL7P-z6DygtRSkNKAv7WZq4OQbC_cf0K8Ucr7Zh4L9d8PAWMBkVR6/exec', {
+        method: 'POST',
+        body: params
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById('estado').textContent = msg;
+        form.reset();
+      })
+      .catch(err => {
+        document.getElementById('estado').textContent = "ERROR AL REGISTRAR";
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
