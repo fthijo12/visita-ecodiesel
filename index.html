@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Visitas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+    .formulario {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      width: 320px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      background-color: green;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #estado {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="formulario">
+    <h2>Registro de Visitas</h2>
+    <input type="text" id="nombre" placeholder="Nombre completo" required />
+    <input type="text" id="cedula" placeholder="Cédula" required />
+    <input type="text" id="empresa" placeholder="Empresa" required />
+    <input type="text" id="placa" placeholder="Placa" />
+    <input type="text" id="persona" placeholder="Persona a visitar" />
+    <input type="time" id="hora" required />
+    <input type="date" id="fechaEntrada" required />
+    <input type="date" id="fechaSalida" required />
+    <textarea id="motivo" placeholder="Motivo de la visita"></textarea>
+    <button onclick="registrar()">Registrar</button>
+    <div id="estado"></div>
+  </div>
+
+  <script>
+    async function registrar() {
+      const datos = {
+        nombre: document.getElementById("nombre").value,
+        cedula: document.getElementById("cedula").value,
+        empresa: document.getElementById("empresa").value,
+        placa: document.getElementById("placa").value,
+        persona: document.getElementById("persona").value,
+        horaIngreso: document.getElementById("hora").value,
+        fechaIngreso: document.getElementById("fechaEntrada").value,
+        fechaSalida: document.getElementById("fechaSalida").value,
+        motivo: document.getElementById("motivo").value
+      };
+
+      const query = new URLSearchParams(datos);
+
+      try {
+        const respuesta = await fetch("https://script.google.com/macros/s/AKfycbxIWSofFGtlCfuHhxbN9ii2SxteAaJ7A5UyU8efAKhZ4DuHKJnQ7rFUK5s7E0RYSisC/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: query
+        });
+
+        const texto = await respuesta.text();
+        const estado = document.getElementById("estado");
+
+        if (texto.trim().includes("EXITOSO")) {
+          estado.textContent = "¡Registro exitoso!";
+          estado.style.color = "green";
+        } else {
+          estado.textContent = "Error: " + texto;
+          estado.style.color = "red";
+        }
+
+      } catch (error) {
+        document.getElementById("estado").textContent = "Error al registrar. Consulta la consola.";
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
