@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Visitas ECODIESEL</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #estado {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <form id="formulario">
+    <h2>Registro de Visitas ECODIESEL</h2>
+
+    <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <input type="text" name="cedula" placeholder="Cédula" required>
+    <input type="text" name="empresa" placeholder="Empresa" required>
+    <input type="text" name="placa" placeholder="Placa" required>
+    <input type="text" name="persona" placeholder="Persona a visitar" required>
+    <input type="date" name="fechaIngreso" required>
+    <input type="date" name="fechaSalida" required>
+    <textarea name="motivo" placeholder="Motivo de la visita" required></textarea>
+    <input type="time" name="horaIngreso" required>
+    <input type="time" name="horaSalida" required>
+
+    <button type="submit">Registrar</button>
+    <div id="estado"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('formulario');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const datos = new FormData(form);
+      const params = new URLSearchParams();
+
+      for (const [key, value] of datos.entries()) {
+        params.append(key, value.toUpperCase());
+      }
+
+      fetch('https://script.google.com/macros/s/AKfycbzuD3-HJ4Szr3xXL7P-z6DygtRSkNKAv7WZq4OQbC_cf0K8Ucr7Zh4L9d8PAWMBkVR6/exec', {
+        method: 'POST',
+        body: params
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById('estado').textContent = msg;
+        form.reset();
+      })
+      .catch(err => {
+        document.getElementById('estado').textContent = "ERROR AL REGISTRAR";
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
+
